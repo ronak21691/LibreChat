@@ -1,4 +1,4 @@
-const { getLLMConfig } = require('./llm');
+import { getLLMConfig } from './llm';
 
 jest.mock('https-proxy-agent', () => ({
   HttpsProxyAgent: jest.fn().mockImplementation((proxy) => ({ proxy })),
@@ -25,8 +25,8 @@ describe('getLLMConfig', () => {
     });
 
     expect(result.llmConfig.clientOptions).toHaveProperty('fetchOptions');
-    expect(result.llmConfig.clientOptions.fetchOptions).toHaveProperty('dispatcher');
-    expect(result.llmConfig.clientOptions.fetchOptions.dispatcher).toBeDefined();
+    expect(result.llmConfig.clientOptions?.fetchOptions).toHaveProperty('dispatcher');
+    expect(result.llmConfig.clientOptions?.fetchOptions?.dispatcher).toBeDefined();
     expect(result.llmConfig.clientOptions.fetchOptions.dispatcher.constructor.name).toBe(
       'ProxyAgent',
     );
@@ -204,7 +204,7 @@ describe('getLLMConfig', () => {
 
   describe('Edge cases', () => {
     it('should handle missing apiKey', () => {
-      const result = getLLMConfig(undefined, { modelOptions: {} });
+      const result = getLLMConfig(undefined as any, { modelOptions: {} });
       expect(result.llmConfig).not.toHaveProperty('apiKey');
     });
 
@@ -238,7 +238,7 @@ describe('getLLMConfig', () => {
       const result = getLLMConfig('test-api-key', {
         modelOptions: {
           model: 'claude-3-opus',
-          maxOutputTokens: null,
+          maxOutputTokens: null as any,
         },
       });
 
@@ -325,7 +325,7 @@ describe('getLLMConfig', () => {
     it('should handle all nullish values removal', () => {
       const result = getLLMConfig('test-api-key', {
         modelOptions: {
-          temperature: null,
+          temperature: null as any,
           topP: undefined,
           topK: 0,
           stop: [],
